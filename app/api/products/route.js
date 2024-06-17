@@ -1,30 +1,15 @@
-export async function GET(request) {
-  const products = [
-    {
-      id: 1,
-      name: 'Product A',
-      price: 29.99,
-      image:
-        'https://fastly.picsum.photos/id/705/400/300.jpg?hmac=_bnVb-Ux9CzhrF6rWOxfrignt0J8EsuH11b10Aa1ZjY',
-      link: 'https://nextjs.org/docs/app/building-your-application/routing/route-handlers',
-    },
-    {
-      id: 2,
-      name: 'Product B',
-      price: 45.5,
-      image:
-        'https://fastly.picsum.photos/id/1056/400/300.jpg?hmac=VqvqEJtViEyB5eQzSWzkBr9cPvqfal01P2g-KzKk30Y',
-      link: 'https://nextjs.org/docs/app/building-your-application/routing/route-handlers',
-    },
-    {
-      id: 3,
-      name: 'Product C',
-      price: 19.95,
-      image:
-        'https://fastly.picsum.photos/id/757/400/300.jpg?hmac=mhAPdsPp9_B7cKZpaSyQ1oWITbK7M72LJRaQBAk1oaI',
-      link: 'https://nextjs.org/docs/app/building-your-application/routing/route-handlers',
-    },
-  ]
+import fsPromises from 'fs/promises'
 
-  return Response.json(products)
+export async function GET() {
+  const filePath = 'app/api/products/products.json' // Simplified path
+
+  try {
+    const data = await fsPromises.readFile(filePath, 'utf-8')
+    const products = JSON.parse(data)
+
+    return Response.json(products) // Streamlined JSON response
+  } catch (error) {
+    console.error('Error reading products.json:', error)
+    return new Response('Internal Server Error', { status: 500 })
+  }
 }
