@@ -1,4 +1,3 @@
-import { PythonShell } from 'python-shell'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { spawn } from 'child_process'
@@ -6,16 +5,29 @@ import { spawn } from 'child_process'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-export async function GET() {
+export async function GET(request) {
   const initialProducts = [{ id: 1, name: 'Product 1' }]
+
+  // 1. Get Data from API Request
+  const apiData = request.nextUrl.searchParams.get('apiData') // Assuming data is passed as a query parameter
+
+  if (!apiData) {
+    return Response.json(
+      { error: 'Missing apiData parameter' },
+      { status: 400 }
+    )
+  }
+
   let newProducts = []
 
-  const pythonProcess = spawn('python3', ['my_script.py'], { cwd: __dirname }) // Replace 'python3' with your Python path if needed
+  const pythonProcess = spawn('python3', ['my_script.py', apiData], {
+    cwd: __dirname,
+  })
 
   pythonProcess.stdout.on('data', (data) => {
     try {
-      newProducts = JSON.parse(data.toString().trim())
-      console.log('newProducts', newProducts)
+      const convertProducts = JSON.parse(data.toString().trim())
+      newProducts = convertProducts.new_products
     } catch (error) {
       console.error('Error parsing JSON:', error)
     }
@@ -26,9 +38,9 @@ export async function GET() {
   })
 
   await new Promise((resolve) => {
-    pythonProcess.on('close', resolve) // Wait for the Python process to finish
+    pythonProcess.on('close', resolve)
   })
 
-  const products = [...initialProducts, ...newProducts.new_products]
+  const products = [...initialProducts, ...newProducts]
   return Response.json({ products })
 }
