@@ -1,35 +1,39 @@
 import fsPromises from 'fs/promises'
 import { geminiText } from '../../utils/gemini'
+import {
+  getGenerateDescriptionPrompt,
+  getGenerateLanguagePrompt,
+} from '../../utils/prompt-generator'
 
-export async function GET() {
+export async function GET(request) {
   const filePath = 'app/api/products/products.json'
 
   try {
     const data = await fsPromises.readFile(filePath, 'utf-8')
-    let generateResult = await geminiText(
-      `Your task is to generate concise product descriptions based on the 'name' field in the JSON data provided below. Please follow these guidelines:
+    let products = JSON.parse(data)
 
-      1. Use the 'name' field as inspiration for the description.
-      2. Add a new 'description' field to each product object.
-      3. Return the entire modified JSON array with the new descriptions included.
+    // if don't have description = generate description
+    if (products.length > 0 && !products[0].description) {
+      let generateResult = await geminiText(getGenerateDescriptionPrompt(data))
+      const result = generateResult.replace(/```|json/g, '').trim()
+      products = JSON.parse(result)
+      // Write the updated data back to the file
+      await fsPromises.writeFile(filePath, JSON.stringify(products, null, 2))
+    }
 
-      **JSON Data:**
-      ${data}
+    const language = request.nextUrl.searchParams.get('language')
 
-      **Important:** 
+    if (language) {
+      const generateResult = await geminiText(
+        getGenerateLanguagePrompt(language, data)
+      )
+      const result = generateResult.replace(/```|json/g, '').trim()
+      products = JSON.parse(result)
+    }
 
-      * Ensure the returned response is a strictly valid JSON array.
-      * Do not include any additional text or explanations outside of the JSON structure.
-      `
-    )
-
-    const result = generateResult.replace(/```|json/g, '').trim()
-    const products = JSON.parse(result)
-    // write the result to a new file in same path as filePath
-    await fsPromises.writeFile(filePath, JSON.stringify(products, null, 2))
     return Response.json(products)
   } catch (error) {
-    console.error('Error reading products.json:', error)
+    console.error('Error: ', error)
     return new Response('Internal Server Error', { status: 500 })
   }
 }
