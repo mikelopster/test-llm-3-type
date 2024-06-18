@@ -1,16 +1,9 @@
-import { GoogleGenerativeAI } from '@google/generative-ai'
-
+import { geminiText } from '../../utils/gemini'
 export async function POST(request) {
   try {
-    // The Gemini 1.5 models are versatile and work with both text-only and multimodal prompts
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
-
     // 1. Parse JSON data from the request body
     const { message } = await request.json()
-    const result = await model.generateContent(message)
-    const response = await result.response
-    const text = response.text()
+    const text = await geminiText(message)
 
     // 2. Process the data (replace with your actual logic)
     const processedData = {
