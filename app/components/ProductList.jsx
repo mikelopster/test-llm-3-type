@@ -20,6 +20,9 @@ export default function ProductList({ products }) {
           />
           <div className="p-4">
             <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
+            <div>
+              <p className="text-gray-600">Description: {product.description}</p>
+            </div>
             <p className="text-gray-600">${product.price}</p>
             <Link href={product.link} target="_blank">
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">

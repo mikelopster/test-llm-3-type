@@ -24,8 +24,9 @@ export async function GET() {
     )
 
     const result = generateResult.replace(/```|json/g, '').trim()
-    console.log('generateResult', result)
     const products = JSON.parse(result)
+    // write the result to a new file in same path as filePath
+    await fsPromises.writeFile(filePath, JSON.stringify(products, null, 2))
     return Response.json(products)
   } catch (error) {
     console.error('Error reading products.json:', error)
