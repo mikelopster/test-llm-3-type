@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import SearchBar from './components/SearchBar'
 import ProductList from './components/ProductList'
 import ShowMoreButton from './components/ShowMoreButton'
@@ -13,6 +13,7 @@ export default function ProductsPage() {
   const [limit, setLimit] = useState(10)
   const [selectedLanguage, setSelectedLanguage] = useState('English')
   const [isLoading, setIsLoading] = useState(true) // Loading state
+  const debounceRef = useRef(null) // Reference for debouncing
 
   useEffect(() => {
     async function fetchProducts() {
@@ -33,11 +34,27 @@ export default function ProductsPage() {
   }, [selectedLanguage])
 
   useEffect(() => {
-    // Filter products when search term changes
-    const newFilteredProducts = products.filter((product) =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    setFilteredProducts(newFilteredProducts.slice(0, limit))
+    if (!searchTerm.trim()) {
+      return
+    }
+    // Debounce the search API call
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current)
+    }
+
+    debounceRef.current = setTimeout(async () => {
+      setIsLoading(true) // Start loading
+      try {
+        const apiUrl = `/api/products/search?text=${searchTerm}`
+        const response = await fetch(apiUrl)
+        const data = await response.json()
+        setFilteredProducts(data.slice(0, limit))
+      } catch (error) {
+        console.error('Error searching products:', error)
+      } finally {
+        setIsLoading(false) // Stop loading
+      }
+    }, 2000) // 2-second delay
   }, [searchTerm, limit])
 
   const handleSearchChange = (term) => {
