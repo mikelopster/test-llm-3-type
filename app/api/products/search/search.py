@@ -10,16 +10,12 @@ paths = ["https://drive.google.com/file/d/1BZsU-Mtaum8GEz5j3hadmAZT2Ozd8nOk/view
 search_term = sys.argv[1]
 
 # Initialize Vertex AI API once per session
-print("== Setup Vertex")
 vertexai.init(project=project_id, location="us-central1")
 
 # Create RagCorpus
-print("== Setup RAG")
 rag_corpus = rag.create_corpus(display_name=display_name)
-print(rag_corpus)
 
 # Import Files to the RagCorpus
-print("== Import File")
 response = rag.import_files(
     rag_corpus.name,
     paths,
@@ -28,7 +24,6 @@ response = rag.import_files(
 )
 
 # Direct context retrieval
-print("== Setup Vertex")
 response = rag.retrieval_query(
     rag_resources=[
         rag.RagResource(
@@ -39,8 +34,6 @@ response = rag.retrieval_query(
     similarity_top_k=10,  # Optional
     vector_distance_threshold=0.5,  # Optional
 )
-print("== Response")
-print(response)
 
 # Enhance generation
 # Create a RAG retrieval tool
@@ -93,7 +86,5 @@ Valid JSON output:
 
 # Generate response
 prompt = create_prompt(search_term)
-print(prompt)
 response = rag_model.generate_content(prompt)
-print("== End Result")
 print(response.text)

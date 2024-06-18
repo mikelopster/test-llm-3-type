@@ -6,12 +6,10 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 export async function GET(request) {
-  const initialProducts = [{ id: 1, name: 'Product 1' }]
-
   // 1. Get Data from API Request
-  const apiData = request.nextUrl.searchParams.get('apiData') // Assuming data is passed as a query parameter
+  const text = request.nextUrl.searchParams.get('text') // Assuming data is passed as a query parameter
 
-  if (!apiData) {
+  if (!text) {
     return Response.json(
       { error: 'Missing apiData parameter' },
       { status: 400 }
@@ -20,14 +18,14 @@ export async function GET(request) {
 
   let newProducts = []
 
-  const pythonProcess = spawn('python3', ['my_script.py', apiData], {
+  const pythonProcess = spawn('python3', ['search.py', text], {
     cwd: __dirname,
   })
 
   pythonProcess.stdout.on('data', (data) => {
     try {
-      const convertProducts = JSON.parse(data.toString().trim())
-      newProducts = convertProducts.new_products
+      const result = data.toString().replace(/```|json/g, '').trim()
+      newProducts = JSON.parse(result)
     } catch (error) {
       console.error('Error parsing JSON:', error)
     }
@@ -40,7 +38,5 @@ export async function GET(request) {
   await new Promise((resolve) => {
     pythonProcess.on('close', resolve)
   })
-
-  const products = [...initialProducts, ...newProducts]
-  return Response.json({ products })
+  return Response.json(newProducts)
 }
