@@ -23,18 +23,6 @@ response = rag.import_files(
     chunk_overlap=100,  # Optional
 )
 
-# Direct context retrieval
-response = rag.retrieval_query(
-    rag_resources=[
-        rag.RagResource(
-            rag_corpus=rag_corpus.name,
-        )
-    ],
-    text=search_term,
-    similarity_top_k=10,  # Optional
-    vector_distance_threshold=0.5,  # Optional
-)
-
 # Enhance generation
 # Create a RAG retrieval tool
 rag_retrieval_tool = Tool.from_retrieval(
