@@ -11,7 +11,7 @@ export async function GET(request) {
 
   if (!text) {
     return Response.json(
-      { error: 'Missing apiData parameter' },
+      { error: 'Missing text parameter' },
       { status: 400 }
     )
   }

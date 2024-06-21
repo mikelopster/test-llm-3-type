@@ -48,14 +48,14 @@ rag_model = GenerativeModel(
 
 def create_prompt(search_term):
     example_input_array = [
-        {"id": 1, "name": "Product A", "price": 29.99, "image": "...", "link": "https://nextjs.org/docs/app/building-your-application/routing/route-handlers",
+        {"id": 1, "name": "AAA", "price": 29.99, "image": "...", "link": "https://nextjs.org/docs/app/building-your-application/routing/route-handlers",
             "description": "A high-quality product designed for everyday use."},
-        {"id": 2, "name": "Product B", "price": 45.5, "image": "...",
+        {"id": 2, "name": "BBB", "price": 45.5, "image": "...",
             "description": "Experience the premium quality of Product B."}
     ]
 
     example_output_array = [
-        {"id": 1, "name": "Product A", "price": 29.99, "image": "...", "link": "https://nextjs.org/docs/app/building-your-application/routing/route-handlers",
+        {"id": 1, "name": "AAA", "price": 29.99, "image": "...", "link": "https://nextjs.org/docs/app/building-your-application/routing/route-handlers",
             "description": "A high-quality product designed for everyday use."},
     ]
 

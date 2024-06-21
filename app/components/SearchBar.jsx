@@ -7,7 +7,13 @@ export default function SearchBar({ onSearchChange }) {
 
   const handleInputChange = (event) => {
     setSearchTerm(event.target.value)
-    onSearchChange(event.target.value)
+  }
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      console.log('enter pressed', searchTerm)
+      onSearchChange(searchTerm)
+    }
   }
 
   return (
@@ -17,6 +23,7 @@ export default function SearchBar({ onSearchChange }) {
         placeholder="Search products..."
         value={searchTerm}
         onChange={handleInputChange}
+        onKeyDown={handleKeyDown} 
         className="w-full p-2 border rounded-md shadow-sm focus:ring focus:ring-blue-200"
       />
     </div>

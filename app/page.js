@@ -9,11 +9,9 @@ import LanguageDropdown from './components/LanguageDropdown'
 export default function ProductsPage() {
   const [products, setProducts] = useState([])
   const [filteredProducts, setFilteredProducts] = useState([])
-  const [searchTerm, setSearchTerm] = useState('')
   const [limit, setLimit] = useState(10)
   const [selectedLanguage, setSelectedLanguage] = useState('English')
   const [isLoading, setIsLoading] = useState(true) // Loading state
-  const debounceRef = useRef(null) // Reference for debouncing
 
   useEffect(() => {
     async function fetchProducts() {
@@ -33,33 +31,20 @@ export default function ProductsPage() {
     fetchProducts()
   }, [selectedLanguage])
 
-  useEffect(() => {
-    if (!searchTerm.trim()) {
-      return
+  const handleSearchChange = async (searchTerm) => {
+    console.log('searchTerm function', searchTerm)
+    setIsLoading(true)
+    try {
+      const apiUrl = `/api/products/search?text=${searchTerm}`
+      const response = await fetch(apiUrl)
+      const data = await response.json()
+      setProducts(data)
+      setFilteredProducts(data.slice(0, limit))
+    } catch (error) {
+      console.error('Error searching products:', error)
+    } finally {
+      setIsLoading(false)
     }
-    // Debounce the search API call
-    if (debounceRef.current) {
-      clearTimeout(debounceRef.current)
-    }
-
-    debounceRef.current = setTimeout(async () => {
-      setIsLoading(true) // Start loading
-      try {
-        const apiUrl = `/api/products/search?text=${searchTerm}`
-        const response = await fetch(apiUrl)
-        const data = await response.json()
-        setFilteredProducts(data.slice(0, limit))
-      } catch (error) {
-        console.error('Error searching products:', error)
-      } finally {
-        setIsLoading(false) // Stop loading
-      }
-    }, 2000) // 2-second delay
-  }, [searchTerm, limit])
-
-  const handleSearchChange = (term) => {
-    setSearchTerm(term)
-    setLimit(10)
   }
 
   const handleLanguageChange = (newLanguage) => {
@@ -80,16 +65,18 @@ export default function ProductsPage() {
       </div>
       {isLoading ? (
         <p className="text-center">Loading products...</p>
-      ) : (
+      ) : filteredProducts.length > 0 ? (
         <>
           <SearchBar onSearchChange={handleSearchChange} />
           <ProductList products={filteredProducts} />
           {filteredProducts.length < products.length && (
             <div className="flex justify-center mt-4">
-              <ShowMoreButton onClick={handleShowMore} />
+              <d onClick={handleShowMore} />
             </div>
           )}
         </>
+      ) : (
+        <p className="text-center text-gray-500">No Result</p> // Display "No Result"
       )}
     </main>
   )
