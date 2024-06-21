@@ -25,6 +25,7 @@ export async function GET(request) {
   pythonProcess.stdout.on('data', (data) => {
     try {
       const result = data.toString().replace(/```|json/g, '').trim()
+      console.log('result', result)
       newProducts = JSON.parse(result)
     } catch (error) {
       console.error('Error parsing JSON:', error)

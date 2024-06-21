@@ -5,7 +5,7 @@ import sys
 
 # Create a RAG Corpus, Import Files, and Generate a response
 project_id = "apppi-gitlab"
-display_name = "test_corpus"
+display_name = "test_corpus_4"
 paths = ["https://drive.google.com/file/d/1BZsU-Mtaum8GEz5j3hadmAZT2Ozd8nOk/view?usp=sharing"]
 search_term = sys.argv[1]
 
@@ -59,7 +59,7 @@ def create_prompt(search_term):
             "description": "A high-quality product designed for everyday use."},
     ]
 
-    return f"""You are a helpful assistant that can generate a JSON object based on a user's query. 
+    return f"""You are a helpful assistant that can generate a JSON object based on a user's query. (Return only json in the format below)
 
 **Query:**
 {search_term}
