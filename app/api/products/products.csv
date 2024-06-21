@@ -1,4 +1,0 @@
-id,name,price,image,link
-1,Product A,29.99,https://fastly.picsum.photos/id/705/400/300.jpg?hmac=_bnVb-Ux9CzhrF6rWOxfrignt0J8EsuH11b10Aa1ZjY,https://nextjs.org/docs/app/building-your-application/routing/route-handlers
-2,Product B,45.5,https://fastly.picsum.photos/id/1056/400/300.jpg?hmac=VqvqEJtViEyB5eQzSWzkBr9cPvqfal01P2g-KzKk30Y,https://nextjs.org/docs/app/building-your-application/routing/route-handlers
-3,Product C,19.95,https://fastly.picsum.photos/id/757/400/300.jpg?hmac=mhAPdsPp9_B7cKZpaSyQ1oWITbK7M72LJRaQBAk1oaI,https://nextjs.org/docs/app/building-your-application/routing/route-handlers
