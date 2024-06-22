@@ -31,4 +31,8 @@ export function getGenerateLanguagePrompt(language, data) {
   Output JSON:
   [ ... ]  // Only the modified JSON array is expected here
   `
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 9b3e92f (add gemini start code)
