@@ -4,9 +4,9 @@ import vertexai
 import sys
 
 # Create a RAG Corpus, Import Files, and Generate a response
-project_id = "apppi-gitlab"
-display_name = "test_corpus_4"
-paths = ["https://drive.google.com/file/d/1BZsU-Mtaum8GEz5j3hadmAZT2Ozd8nOk/view?usp=sharing"]
+project_id = "project-id-name"
+display_name = "test_corpus" # name
+paths = ["example_file"]
 search_term = sys.argv[1]
 
 # Initialize Vertex AI API once per session
